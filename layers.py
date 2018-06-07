@@ -29,3 +29,34 @@ def dense_backward(dZ, cache):
     dA_prev = dZ.dot(W.T) # gradients w.r.t previous layer activations
     
     return dA_prev, dW, db
+
+def layer_forward(A_prev, W, b, activation, dropout_rate=None):
+    """Forward propagation of a dense layer with an activation function of choice.
+
+    Args:
+        A_prev: activation matrix from previous layer
+        W: weight matrix of current layer 
+        b: bias vector of current layer
+        activation (str): activation function, e.g. "sigmoid", "relu"
+        dropout_rate (float): probability of randomly setting activations to zero
+
+    Returns:
+        A: output of the activation function
+        cache: tuple of values needed for backpropagation
+    """
+    if activation.lower() == "sigmoid":
+        Z, linear_cache = dense_forward(A_prev, W, b)
+        A, activation_cache = sigmoid(Z)
+        cache = (linear_cache, activation_cache)
+        if dropout_rate: # apply dropout if not None
+            A, dropout_mask = dropout(A, dropout_rate)
+            cache = (linear_cache, activation_cache, dropout_mask)
+    elif activation.lower() == "relu":
+        Z, linear_cache = dense_forward(A_prev, W, b)
+        A, activation_cache = relu(Z)
+        cache = (linear_cache, activation_cache)
+        if dropout_rate: # apply dropout if not None
+            A, dropout_mask = dropout(A, dropout_rate)
+            cache = (linear_cache, activation_cache, dropout_mask)
+
+    return A, cache
