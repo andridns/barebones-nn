@@ -57,8 +57,8 @@ This simple neural network library is built in a modular approach. The python mo
  * [layers.py](./layers.py) - layers and entire model forward and backward APIs
  * [activations.py](./activations.py) - activation gates forward and backward APIs
  * [metrics.py](./metrics.py) - loss function and evaluation metrics
- * [nn_utils.py](./nn_utils.py) - weight initializer, weight updater, prediction functions, plotting function
- * [utils.py](./utils.py) - preprocessing functions (standard scaler, train-test split)
+ * [utils.py](./utils.py) - weight initializer, weight updater, prediction functions, plotting function
+ * [preprocessing.py](./preprocessing.py) - preprocessing functions (standard scaler, train-test split)
  * [train.py](./train.py) - command-line training executable script
  * [quickstart.ipynb](./quickstart.ipynb) - sample usage
 
