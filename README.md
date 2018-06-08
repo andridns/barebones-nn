@@ -109,9 +109,9 @@ Upon training completion, there are output files that might be useful for docume
 
 ## How It works
 
-Detailed explanations of how this repository works is contained in [quicksart.ipynb](./quicksart.ipynb).
+Detailed explanations of how this repository works is contained in [quickstart.ipynb](./quickstart.ipynb).
 
-A cached HTML version of the notebook is also available in [quicksart.html](./quicksart.html).
+A cached HTML version of the notebook is also available in [quickstart.html](./quickstart.html).
 
 ## Other Remarks
 
