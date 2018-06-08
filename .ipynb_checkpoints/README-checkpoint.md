@@ -123,9 +123,7 @@ Questions, comments and constructive feedbacks are thoroughly welcome :)
 
 ## TO-DOs
 
-- Model saving (e.g. pickle)
 - Convolution Operation
-- Recurrent Modules
 - L1L2 Regularizations
 - Batch Normalization
 - Etc...
