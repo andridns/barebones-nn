@@ -45,7 +45,7 @@ python3 train.py --ndims 4 32 24 3 --activation relu --lrate 0.0145 --dropout 0.
 
 ## How It works
 
-Detailed explanations of how this repository works is contained in [quickstart.ipynb](./quickstart.ipynb).
+Detailed explanation of how this repository works is contained in [quickstart.ipynb](./quickstart.ipynb).
 
 A cached HTML version of the notebook is also available in [quickstart.html](./quickstart.html).
 
@@ -60,11 +60,11 @@ This simple neural network library is built in a modular approach. The python mo
  * [nn_utils.py](./nn_utils.py) - weight initializer, weight updater, prediction functions, plotting function
  * [utils.py](./utils.py) - preprocessing functions (standard scaler, train-test split)
  * [train.py](./train.py) - command-line training executable script
- * [demo.ipynb](./demo.ipynb) - main Jupyter notebook with explanations
+ * [quickstart.ipynb](./quickstart.ipynb) - sample usage
 
 ## Further Model Customization
 
-While the `argparser` in `train.py` only include 4 customizable parameters, it is possible to build a more detailed model configuration. Please refer to [demo.ipynb](./demo.ipynb) for a more concrete demonstration.
+While the `argparser` in `train.py` only offers 4 customizable parameters, it is possible to build a more detailed model configuration. Please refer to [quickstart.ipynb](./quickstart.ipynb) for a more concrete example.
 
 There are 7 customizable parameters:
 
