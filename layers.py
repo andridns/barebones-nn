@@ -60,3 +60,103 @@ def layer_forward(A_prev, W, b, activation, dropout_rate=None):
             cache = (linear_cache, activation_cache, dropout_mask)
 
     return A, cache
+
+def layer_backward(dA, cache, activation, dropout_rate=None):
+    """Backpropagation of a dense layer with an activation function of choice.
+
+    Args:
+        dA: gradient matrix w.r.t activations in current layer
+        cache: tuple of values recorded during forward propagation
+        activation (str): activation function, e.g. "sigmoid", "relu"
+        dropout_rate (float): probability of randomly setting activations to zero
+
+    Returns:
+        dA_prev: gradient matrix w.r.t activations in previous layer
+        dW: gradient matrix w.r.t weights in current layer
+        db: gradient matrix w.r.t biases in current layer
+    """
+    if dropout_rate:
+        linear_cache, activation_cache, dropout_mask = cache
+    else:
+        linear_cache, activation_cache = cache
+    
+    if activation.lower() == "relu":
+        if dropout_rate: # scale up activations if dropout is used
+            dA = dropout_backward(dA, dropout_mask, dropout_rate)
+        dZ = relu_backward(dA, activation_cache)
+        dA_prev, dW, db = dense_backward(dZ, linear_cache)
+    elif activation.lower() == "sigmoid":
+        if dropout_rate: # scale up activations if dropout is used
+            dA = dropout_backward(dA, dropout_mask, dropout_rate)
+        dZ = sigmoid_backward(dA, activation_cache)
+        dA_prev, dW, db = dense_backward(dZ, linear_cache)
+    
+    return dA_prev, dW, db
+
+def model_forward(X, params, activation, dropout_rate=None):
+    """Model forward propagation from inputs to prediction probabilities.
+    
+    Args:
+        X: input matrix of size [None, n_features]
+        params: dictionary of model weights (W) and biases (b) in all layers 
+        activation (str): activation function, e.g. "sigmoid", "relu"
+        dropout_rate (float): probability of randomly setting activations to zero    
+
+    Returns:
+        probs (float): prediction probability vector from model forward propagation
+        caches: list of tuple of values recorded during forward propagation
+    """
+    caches = []
+    A = X
+    L = len([k for k in params.keys() if 'W' in k]) # number of layers in the neural network
+    # Forward propagation from first layer to the layer before softmax
+    for l in range(1, L):
+        A_prev = A 
+        A, cache = layer_forward(A_prev, params['W' + str(l)], params['b' + str(l)], activation, dropout_rate)
+        caches.append(cache)
+    # Forward propagation in softmax layer
+    A_prev = A
+    W = params['W' + str(L)]
+    b = params['b' + str(L)]
+    Z, linear_cache = dense_forward(A_prev, W, b)
+    probs, activation_cache = softmax(Z)
+    cache = (linear_cache, activation_cache)
+    caches.append(cache) 
+
+    return probs, caches
+
+def model_backward(probs, y, caches, activation, dropout_rate=None):
+    """Error backpropagation to all model parameters from last layer to first layer.
+    
+    Args:
+        probs (float): prediction probability vector from model forward propagation
+        y (int): label vector of size [None,]
+        caches: list of tuple of values recorded during forward propagation
+        activation (str): activation function, e.g. "sigmoid", "relu"
+        dropout_rate (float): probability of randomly setting activations to zero    
+
+    Returns:
+        grads: dictionary of gradient parameters dA (activations), dW (weights) and db (biases)
+    """
+    grads = {}
+    L = len(caches) # the number of layers
+    m = probs.shape[0]
+    # Backpropagation to softmax layer
+    dZ = softmax_backward(probs, y)
+    current_cache = caches[L-1]
+    linear_cache, _ = current_cache
+    dA_prev_temp, dW_temp, db_temp = dense_backward(dZ, linear_cache)
+    grads["dA" + str(L)] = dA_prev_temp
+    grads["dW" + str(L)] = dW_temp
+    grads["db" + str(L)] = db_temp
+    # Backpropagation from layer before softmax to first layer
+    for l in reversed(range(L-1)):
+        current_cache = caches[l]
+        dA_prev_temp, dW_temp, db_temp = layer_backward(grads["dA" + str(l + 2)], current_cache, activation, dropout_rate)
+        grads["dA" + str(l + 1)] = dA_prev_temp
+        grads["dW" + str(l + 1)] = dW_temp
+        grads["db" + str(l + 1)] = db_temp
+
+    return grads
+
+
