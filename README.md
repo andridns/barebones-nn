@@ -41,7 +41,7 @@ All core neural network modules and data preprocessing functions are written in 
 
 ## Folder Structure
 
-I build the neural network in a modular approach. In the root project directory you'll find these python modules, each serving unique function groups:
+This simple neural network library is built in a modular approach. The python modules are organized as follows:
 
  * [model.py](./model.py) - main model declaration
  * [layers.py](./layers.py) - layers and entire model forward and backward APIs
@@ -70,3 +70,60 @@ python3 train.py --ndims 4 32 24 3 --activation relu --lrate 0.0145 --dropout 0.
 
 `dropout` is the dropout rate of the model.
 
+## Further Model Customization
+
+While the `argparser` in `train.py` only include 4 customizable parameters, it is possible to build a more detailed model configuration. Please refer to [demo.ipynb](./demo.ipynb) for a more concrete demonstration.
+
+There are 7 customizable parameters:
+
+ * layer_dims - layer dimensions including input and output layer
+ * activation - activation function for hidden layers
+ * weight_init - weight initialization method
+ * dropout rate - probability of randomly setting activation to zero
+ * learning_rate - scalar for gradient descent update rule
+ * num_steps - number of optimization iteration (epoch)
+ * early_stopping - if True, stop training iterations when maximum validation accuracy is achieved
+
+## Output Files
+
+Upon training completion, there are output files that might be useful for documentation purposes:
+ * [logs.csv](./logs.csv) - records of training loss, training accuracy and validation accuracy
+ * [results.png](./results.png) - matplotlib output for training loss and validation accuracy
+
+## Available Activations
+
+- [Sigmoid](https://en.wikipedia.org/wiki/Sigmoid_function)
+- [ReLU](https://arxiv.org/abs/1803.08375)
+- [Softmax](https://en.wikipedia.org/wiki/Softmax_function)
+
+## Available Weight Initializations
+
+- [Glorot Uniform Initialization](https://keras.io/initializers/#glorot_uniform)
+- [Glorot Normal Initialization](https://keras.io/initializers/#glorot_normal)
+- [He Uniform Initialization](https://keras.io/initializers/#he_uniform)
+- [He Normal Initialization](https://keras.io/initializers/#he_normal)
+
+## Available Regularizations
+
+- [Dropout](https://arxiv.org/abs/1207.0580)
+
+## How It works
+
+Detailed explanations of how this repository works is contained in [quicksart.ipynb](./quicksart.ipynb).
+
+A cached HTML version of the notebook is also available in [quicksart.html](./quicksart.html).
+
+## Other Remarks
+
+This library is meant for educational purposes as each module is built with minimal dependencies to external libraries except NumPy.
+
+Please don't hesitate to contact me if some of the instructions didn't work.
+
+Questions, comments and constructive feedbacks are thoroughly welcome :)
+
+## TO-DOs
+
+- Convolution Operation
+- L1L2 Regularizations
+- Batch Normalization
+- Etc...
