@@ -24,33 +24,6 @@ pip3 install -r requirements.txt
 pip3 install jupyter notebook jupyterlab
 ```
 
-## Dependencies
-
-Dependencies used:
-
-*   Numpy
-*   Pandas
-*   Matplotlib
-*   tqdm
-*   Scikit-learn
-*   Jupyter Notebook / Jupyter Lab
-
-Scikit-learn is only needed to download the iris dataset. Pandas and Matplotlib are only required for logging the training information into a CSV file, as well saving training curve visualization into a PNG file. Tqdm is for printing training progress bar.
-
-All core neural network modules and data preprocessing functions are written in pure Numpy from scratch.
-
-## Folder Structure
-
-This simple neural network library is built in a modular approach. The python modules are organized as follows:
-
- * [model.py](./model.py) - main model declaration
- * [layers.py](./layers.py) - layers and entire model forward and backward APIs
- * [activations.py](./activations.py) - activation gates forward and backward APIs
- * [metrics.py](./metrics.py) - loss function and evaluation metrics
- * [nn_utils.py](./nn_utils.py) - weight initializer, weight updater, prediction functions, plotting function
- * [utils.py](./utils.py) - preprocessing functions (standard scaler, train-test split)
- * [train.py](./train.py) - command-line training executable script
- * [demo.ipynb](./demo.ipynb) - main Jupyter notebook with explanations
 
 ## Sample Usage from Command-Line Interface
 
@@ -69,6 +42,25 @@ python3 train.py --ndims 4 32 24 3 --activation relu --lrate 0.0145 --dropout 0.
 `lrate` is the model learning rate.
 
 `dropout` is the dropout rate of the model.
+
+## How It works
+
+Detailed explanations of how this repository works is contained in [quickstart.ipynb](./quickstart.ipynb).
+
+A cached HTML version of the notebook is also available in [quickstart.html](./quickstart.html).
+
+## Folder Structure
+
+This simple neural network library is built in a modular approach. The python modules are organized as follows:
+
+ * [model.py](./model.py) - main model declaration
+ * [layers.py](./layers.py) - layers and entire model forward and backward APIs
+ * [activations.py](./activations.py) - activation gates forward and backward APIs
+ * [metrics.py](./metrics.py) - loss function and evaluation metrics
+ * [nn_utils.py](./nn_utils.py) - weight initializer, weight updater, prediction functions, plotting function
+ * [utils.py](./utils.py) - preprocessing functions (standard scaler, train-test split)
+ * [train.py](./train.py) - command-line training executable script
+ * [demo.ipynb](./demo.ipynb) - main Jupyter notebook with explanations
 
 ## Further Model Customization
 
@@ -107,15 +99,24 @@ Upon training completion, there are output files that might be useful for docume
 
 - [Dropout](https://arxiv.org/abs/1207.0580)
 
-## How It works
+## Dependencies
 
-Detailed explanations of how this repository works is contained in [quickstart.ipynb](./quickstart.ipynb).
+Dependencies used:
 
-A cached HTML version of the notebook is also available in [quickstart.html](./quickstart.html).
+*   Numpy
+*   Pandas
+*   Matplotlib
+*   tqdm
+*   Scikit-learn
+*   Jupyter Notebook / Jupyter Lab
+
+Scikit-learn is only needed to download the iris dataset. Pandas and Matplotlib are only required for logging the training information into a CSV file, as well saving training curve visualization into a PNG file. Tqdm is for printing training progress bar.
+
+All core neural network modules and data preprocessing functions are written in pure Numpy from scratch.
 
 ## Other Remarks
 
-This library is meant for educational purposes as each module is built with minimal dependencies to external libraries except NumPy.
+This library is meant for educational purposes as each module is built with minimal dependencies to external libraries except Numpy.
 
 Please don't hesitate to contact me if some of the instructions didn't work.
 
