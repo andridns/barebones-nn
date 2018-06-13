@@ -79,7 +79,7 @@ def feedforward_neuralnet(X_train, y_train, X_test, y_test, layer_dims,
     model['layer_dims'] = np.array(layer_dims)
     model['activation'] = activation
     model['weight_init'] = weight_init
-    model['dropout_rate'] = float(dropout_rate)
+    model['dropout_rate'] = float(dropout_rate) if dropout_rate else 0.0
     model['learning_rate'] = float(learning_rate)
     model['best_epoch'] = int(best_epoch)
 
