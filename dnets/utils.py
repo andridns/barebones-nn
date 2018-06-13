@@ -1,13 +1,15 @@
-from __future__ import absolute_import
-import numpy as np
-from dnets import weight_init
 import numpy as np
 import pandas as pd
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
-from dnets.layers import model_forward
-from dnets.metrics import accuracy
+import sys
+import tqdm
+sys.path.append('../')
+from dnets import weight_init
+from dnets.preprocessing import train_test_split
+from dnets.layers import model_forward, model_backward
+from dnets.metrics import cat_xentropy_loss, accuracy
 
 def predict(X, y, model):
     """Calculate accuracy given X, y, model parameters and activation."""
@@ -28,9 +30,8 @@ def model_predict(X, y, model):
     print('Accuracy: {}'.format(acc))
     return preds, acc
 
-def update_params(model, grads):
+def update_params(model, grads, learning_rate):
     """Update model parameters through gradient descent."""
-    learning_rate = model.get('learning_rate')
     L = len([k for k in model['var'].keys() if 'W' in k]) # number of layers in the neural network
     for l in range(L): # parameters updates by update rule
         model['var']["W" + str(l+1)] -= learning_rate * grads["dW" + str(l+1)] # weights update
@@ -82,4 +83,41 @@ def global_param_init(model, random_seed=42):
         model['var']['b' + str(l)] = np.zeros((1, model['layer_dims'][l])) # bias initialization
         model['var']['W' + str(l)] = getattr(weight_init, f'{initializer}')(ndims[l-1], ndims[l])
         
+    return model
+
+def train(model, X_train, X_test, y_train, y_test,
+          learning_rate=0.001, num_steps=3000,
+          early_stopping=True):
+    
+    losses = [] # initialize loss array
+    train_accs = [] # initialize training accuracy array
+    val_accs = [] # initialize validation accuracy array
+    t = tqdm.trange(num_steps) # tqdm object
+    best_epoch = num_steps # initialize best epoch value
+    # Training loop
+    for i in t:
+        probs, caches = model_forward(X_train, model) # forward propagation
+        loss = cat_xentropy_loss(probs, y_train) # calculate loss
+        grads = model_backward(probs, y_train, model) # error backpropagation
+        params = update_params(model, grads, learning_rate) # weight updates
+        train_acc = predict(X_train, y_train, model) # training accuracy
+        val_acc = predict(X_test, y_test, model) # testing accuracy
+        t.set_postfix(loss=float(loss), train_acc=train_acc, val_acc=val_acc) # tqdm printing
+        losses.append(loss)
+        train_accs.append(train_acc)
+        val_accs.append(val_acc)
+        # Record training logs
+        if early_stopping and val_acc > 0.99:
+            best_epoch = i
+            print()
+            print('Early Stopping at Epoch: {}'.format(i))      
+            break # stop training if maximum accuracy is achieved
+    print('Training Finished')
+    print('Training Accuracy Score: {:.2f}%'.format(train_acc*100))
+    print('Validation Accuracy Score: {:.2f}%'.format(val_acc*100))
+    
+    model['losses'] = np.array(losses)
+    model['train_scores'] = np.array(train_accs)
+    model['val_scores'] = np.array(val_accs)
+    
     return model

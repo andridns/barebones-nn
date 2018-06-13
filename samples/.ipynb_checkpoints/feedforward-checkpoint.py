@@ -1,5 +1,6 @@
 import numpy as np
 import tqdm
+import sys
 sys.path.append(../)
 from dnets.layers import model_forward, model_backward
 from dnets.utils import predict, global_param_init, update_params, plot, log_csv
