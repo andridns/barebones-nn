@@ -127,27 +127,31 @@ def layer_backward(dA, cache, activation, dropout_rate=None):
     
     return dA_prev, dW, db
 
-def model_forward(X, params, activation, dropout_rate=None):
+def model_forward(X, model):
     """Model forward propagation from inputs to prediction probabilities.
     
     Args:
         X: input matrix of size [None, n_features]
         params: dictionary of model weights (W) and biases (b) in all layers 
-        activation (str): activation function, e.g. "sigmoid", "relu"
+        act (str): act function, e.g. "sigmoid", "relu"
         dropout_rate (float): probability of randomly setting activations to zero    
 
     Returns:
         probs (float): prediction probability vector from model forward propagation
         caches: list of tuple of values recorded during forward propagation
     """
-    caches = []
+    params = model.get('var')
+    act = model.get('activation')
+    dropout_rate = model.get('dropout_rate')
+
+    model['caches'] = []
     A = X
     L = len([k for k in params.keys() if 'W' in k]) # number of layers in the neural network
     # Forward propagation from first layer to the layer before softmax
     for l in range(1, L):
         A_prev = A 
-        A, cache = layer_forward(A_prev, params['W' + str(l)], params['b' + str(l)], activation, dropout_rate)
-        caches.append(cache)
+        A, cache = layer_forward(A_prev, params['W' + str(l)], params['b' + str(l)], act, dropout_rate)
+        model['caches'].append(cache)
     # Forward propagation in softmax layer
     A_prev = A
     W = params['W' + str(L)]
@@ -155,23 +159,27 @@ def model_forward(X, params, activation, dropout_rate=None):
     Z, linear_cache = dense_forward(A_prev, W, b)
     probs, activation_cache = softmax(Z)
     cache = (linear_cache, activation_cache)
-    caches.append(cache) 
+    model['caches'].append(cache) 
 
-    return probs, caches
+    return probs, model
 
-def model_backward(probs, y, caches, activation, dropout_rate=None):
+def model_backward(probs, y, model):
     """Error backpropagation to all model parameters from last layer to first layer.
     
     Args:
         probs (float): prediction probability vector from model forward propagation
         y (int): label vector of size [None,]
         caches: list of tuple of values recorded during forward propagation
-        activation (str): activation function, e.g. "sigmoid", "relu"
+        act (str): act function, e.g. "sigmoid", "relu"
         dropout_rate (float): probability of randomly setting activations to zero    
 
     Returns:
         grads: dictionary of gradient parameters dA (activations), dW (weights) and db (biases)
     """
+    caches = model.get('caches')
+    act = model.get('activation')
+    dropout_rate = model.get('dropout_rate')
+
     grads = {}
     L = len(caches) # the number of layers
     m = probs.shape[0]
@@ -186,7 +194,7 @@ def model_backward(probs, y, caches, activation, dropout_rate=None):
     # Backpropagation from layer before softmax to first layer
     for l in reversed(range(L-1)):
         current_cache = caches[l]
-        dA_prev_temp, dW_temp, db_temp = layer_backward(grads["dA" + str(l + 2)], current_cache, activation, dropout_rate)
+        dA_prev_temp, dW_temp, db_temp = layer_backward(grads["dA" + str(l + 2)], current_cache, act, dropout_rate)
         grads["dA" + str(l + 1)] = dA_prev_temp
         grads["dW" + str(l + 1)] = dW_temp
         grads["db" + str(l + 1)] = db_temp
