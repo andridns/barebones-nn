@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import numpy as np
 import tqdm
 from layers import model_forward, model_backward

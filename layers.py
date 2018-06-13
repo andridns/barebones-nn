@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import numpy as np
 from activations import sigmoid, sigmoid_backward
 from activations import relu, relu_backward
