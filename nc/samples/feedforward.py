@@ -1,8 +1,9 @@
 import numpy as np
 import tqdm
-from layers import model_forward, model_backward
-from utils import predict, global_param_init, update_params, plot, log_csv
-from metrics import cat_xentropy_loss
+sys.path.append(../)
+from dnets.layers import model_forward, model_backward
+from dnets.utils import predict, global_param_init, update_params, plot, log_csv
+from dnets.metrics import cat_xentropy_loss
 
 def feedforward_neuralnet(X_train, y_train, X_test, y_test, layer_dims,
                           activation='relu', weight_init='glorot_uniform',
