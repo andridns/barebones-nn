@@ -1,6 +1,6 @@
 # npnn
 
-Simple neural network library written in numpy.
+Simple neural network library written in Numpy.
 
 ## Installation
 
@@ -107,8 +107,6 @@ All core neural network modules and data preprocessing functions are written in 
 This library is meant for educational purposes as each module is built with minimal dependencies to external libraries except Numpy.
 
 Please don't hesitate to contact me if some of the instructions didn't work.
-
-Questions, comments and constructive feedbacks are thoroughly welcome :)
 
 ## TO-DOs
 
