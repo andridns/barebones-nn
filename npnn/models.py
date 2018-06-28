@@ -1,6 +1,6 @@
 import sys
 sys.path.append('../')
-from dnets.utils import global_param_init
+from npnn.utils import global_param_init
 
 def feedforward(layer_dims,
                 activation='relu', weight_init='glorot_uniform',

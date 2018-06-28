@@ -1,4 +1,6 @@
-# barebones-nn
+# npnn
+
+Simple neural network library written in numpy
 
 ## Installation
 

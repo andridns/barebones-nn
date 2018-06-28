@@ -6,10 +6,10 @@ import matplotlib.pyplot as plt
 import sys
 import tqdm
 sys.path.append('../')
-from dnets import weight_init
-from dnets.preprocessing import train_test_split
-from dnets.layers import model_forward, model_backward
-from dnets.metrics import cat_xentropy_loss, accuracy
+from npnn import weight_init
+from npnn.preprocessing import train_test_split
+from npnn.layers import model_forward, model_backward
+from npnn.metrics import cat_xentropy_loss, accuracy
 
 def predict(X, y, model):
     """Calculate accuracy given X, y, model parameters and activation."""
@@ -46,7 +46,7 @@ def log_csv(losses, train_accs, val_accs):
                                     np.array(val_accs).reshape(-1,1)], axis=1)
     training_df = pd.DataFrame(training_data, columns=['loss','training_accuracy','validation_accuracy'])
     training_df.index.name = 'global_step'
-    training_df.to_csv('logs.csv')
+    training_df.to_csv('results/logs.csv')
     print('Training Logs are saved as a CSV file.')
     
 def plot(losses, val_accs, learning_rate):
@@ -60,7 +60,7 @@ def plot(losses, val_accs, learning_rate):
     ax2.set_xlabel('Global Step')
     ax2.set_ylabel('Accuracy')
     ax2.set_title('Validation Accuracy (Learning rate= {})'.format(learning_rate))
-    fig.savefig('results.png')
+    fig.savefig('results/train_curve.png')
     print('Training Curves are saved as a PNG file.')
     
 def init_model(**kwargs):
@@ -119,5 +119,7 @@ def train(model, X_train, X_test, y_train, y_test,
     model['losses'] = np.array(losses)
     model['train_scores'] = np.array(train_accs)
     model['val_scores'] = np.array(val_accs)
+    plot(model['losses'],model['val_scores'],learning_rate)
+    log_csv(model['losses'], model['train_scores'], model['val_scores'])
     
     return model
