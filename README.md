@@ -31,18 +31,22 @@ pip3 install jupyter notebook jupyterlab
 To build and train a feedforward network with a hidden layers containing 20 neurons:
 ``` bash
 # Run this from root project directory
-python3 train.py --ndims 4 20 3 --activation sigmoid --lrate 0.0145 --dropout 0.1
+python3 train.py --ndims 4 20 3 --activation sigmoid --lr 0.0145 --dropout 0.1 --init he_normal
 ```
 
 Similarly, for a feedforward network with 2 hidden layers, with 32 and 24 neurons respectively:
 ``` bash
 # Run this from root project directory
-python3 train.py --ndims 4 32 24 3 --activation relu --lrate 0.0145 --dropout 0.5
+python3 train.py --ndims 4 32 24 3 --activation relu --lr 0.0145 --dropout 0.5 --init he_uniform 
 ```
 
-`lrate` is the model learning rate.
+`lr` is the model learning rate.
 
 `dropout` is the dropout rate of the model.
+
+`init` is the weight initialization method (see below for available options).
+
+`num_epoch` is the number of training iterations.
 
 ## How It works
 
