@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 import matplotlib
-matplotlib.use('Agg')
+#matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import sys
 import tqdm
@@ -30,12 +30,12 @@ def model_predict(X, y, model):
     print('Accuracy: {}'.format(acc))
     return preds, acc
 
-def update_params(model, grads, learning_rate):
+def update_params(model, grads):
     """Update model parameters through gradient descent."""
     L = len([k for k in model['var'].keys() if 'W' in k]) # number of layers in the neural network
     for l in range(L): # parameters updates by update rule
-        model['var']["W" + str(l+1)] -= learning_rate * grads["dW" + str(l+1)] # weights update
-        model['var']["b" + str(l+1)] -= learning_rate * grads["db" + str(l+1)] # biases update
+        model['var']["W" + str(l+1)] -= model['learning_rate'] * grads["dW" + str(l+1)] # weights update
+        model['var']["b" + str(l+1)] -= model['learning_rate'] * grads["db" + str(l+1)] # biases update
         
     return model
 
@@ -49,17 +49,17 @@ def log_csv(losses, train_accs, val_accs):
     training_df.to_csv('results/logs.csv')
     print('Training Logs are saved as a CSV file.')
     
-def plot(losses, val_accs, learning_rate):
+def plot(losses, val_accs):
     """Plots model loss and accuracy curves and save results as png."""
     fig, (ax1, ax2) = plt.subplots(1, 2, sharey=False, figsize=(12, 4))
     ax1.plot(np.arange(len(losses)), np.squeeze(losses))
     ax1.set_xlabel('Global Step')
     ax1.set_ylabel('Loss')
-    ax1.set_title('Loss Curve (Learning rate= {})'.format(learning_rate))
+    ax1.set_title('Loss Curve')
     ax2.plot(np.arange(len(val_accs)), np.squeeze(val_accs))
     ax2.set_xlabel('Global Step')
     ax2.set_ylabel('Accuracy')
-    ax2.set_title('Validation Accuracy (Learning rate= {})'.format(learning_rate))
+    ax2.set_title('Validation Accuracy')
     fig.savefig('results/train_curve.png')
     print('Training Curves are saved as a PNG file.')
     
@@ -86,8 +86,7 @@ def global_param_init(model, random_seed=42):
     return model
 
 def train(model, X_train, X_test, y_train, y_test,
-          learning_rate=0.001, num_steps=3000,
-          early_stopping=True):
+          num_steps=3000, early_stopping=True):
     
     losses = [] # initialize loss array
     train_accs = [] # initialize training accuracy array
@@ -99,7 +98,7 @@ def train(model, X_train, X_test, y_train, y_test,
         probs, caches = model_forward(X_train, model) # forward propagation
         loss = cat_xentropy_loss(probs, y_train) # calculate loss
         grads = model_backward(probs, y_train, model) # error backpropagation
-        params = update_params(model, grads, learning_rate) # weight updates
+        params = update_params(model, grads) # weight updates
         train_acc = predict(X_train, y_train, model) # training accuracy
         val_acc = predict(X_test, y_test, model) # testing accuracy
         t.set_postfix(loss=float(loss), train_acc=train_acc, val_acc=val_acc) # tqdm printing
@@ -119,7 +118,7 @@ def train(model, X_train, X_test, y_train, y_test,
     model['losses'] = np.array(losses)
     model['train_scores'] = np.array(train_accs)
     model['val_scores'] = np.array(val_accs)
-    plot(model['losses'],model['val_scores'],learning_rate)
+    plot(model['losses'],model['val_scores'])
     log_csv(model['losses'], model['train_scores'], model['val_scores'])
     
     return model
